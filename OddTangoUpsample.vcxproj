@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="NsightTegraProject">
+    <NsightTegraProjectRevisionNumber>8</NsightTegraProjectRevisionNumber>
+  </PropertyGroup>
+  <PropertyGroup Label="UserMacros">
+    <PlatConf Condition="'$(Platform)'=='Tegra-Android'">android-arm7a-$(Configuration)</PlatConf>
+    <PlatConf Condition="'$(Platform)'=='x64'">win32-x86_64-$(Configuration)</PlatConf>
+    <PlatConf Condition="'$(Platform)'=='Win32'">win32-x86-$(Configuration)</PlatConf>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="debug|Tegra-Android">
+      <Configuration>debug</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release|Tegra-Android">
+      <Configuration>release</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="profile|Tegra-Android">
+      <Configuration>profile</Configuration>
+      <Platform>Tegra-Android</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\drawable-xxhdpi\ic_launcher.png" />
+    <None Include="res\layout\tango_upsample.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\strings.xml" />
+    <None Include="res\values\styles.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values-v11\styles.xml" />
+    <None Include="res\values-v14\styles.xml" />
+    <None Include="res\values-w820dp\dimens.xml" />
+    <JCompile Include="src\com\odd\TangoUpsample\TangoUpsampleActivity.java">
+      <FileType>Document</FileType>
+    </JCompile>
+    <JCompile Include="src\com\odd\TangoUpsample\TangoUpsampleRenderer.java">
+      <FileType>Document</FileType>
+    </JCompile>
+    <JCompile Include="src\com\odd\TangoUpsample\TangoUpsampleNative.java">
+      <FileType>Document</FileType>
+    </JCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="jni/TangoUpsampleNative.cpp" />
+    <ClCompile Include="jni/Tango.cpp" />
+    <ClCompile Include="jni\GlBilateralGrid.cpp" />
+    <ClCompile Include="jni\GlDepthUpsampler.cpp" />
+    <ClCompile Include="jni\GlPlaneMesh.cpp" />
+    <ClCompile Include="jni\GlPointcloud.cpp" />
+    <ClCompile Include="jni\GlPointcloudRenderer.cpp" />
+    <ClCompile Include="jni\GlQuad.cpp" />
+    <ClCompile Include="jni\GlVideoOverlay.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/GlMaterial.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/MaterialShaders.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/ar_ruler.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/axis.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/cube.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/camera.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/frustum.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/GlUtil.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/grid.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/trace.cpp" />
+    <ClCompile Include="modules/tango-gl-renderer/transform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidBuild Include="AndroidManifest.xml">
+      <SubType>Designer</SubType>
+    </AndroidBuild>
+    <AndroidBuild Include="build.xml" />
+    <AndroidBuild Include="local.properties" />
+    <AndroidBuild Include="proguard.cfg" />
+    <AndroidBuild Include="project.properties" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="jni\GlBilateralGrid.h" />
+    <ClInclude Include="jni\GlDepthUpsampler.h" />
+    <ClInclude Include="jni\GlPlaneMesh.h" />
+    <ClInclude Include="jni\GlPointcloudRenderer.h" />
+    <ClInclude Include="jni\TangoRenderer.h" />
+    <ClInclude Include="jni\GlPointcloud.h" />
+    <ClInclude Include="jni\GlQuad.h" />
+    <ClInclude Include="jni\Tango.h" />
+    <ClInclude Include="jni\GlVideoOverlay.h" />
+    <ClInclude Include="jni\TangoUpsampleUtil.h" />
+    <ClInclude Include="modules\tango-gl-renderer\GlMaterial.h" />
+    <ClInclude Include="modules\tango-gl-renderer\MaterialShaders.h" />
+    <ClInclude Include="modules\tango-gl-renderer\ar_ruler.h" />
+    <ClInclude Include="modules\tango-gl-renderer\axis.h" />
+    <ClInclude Include="modules\tango-gl-renderer\band.h" />
+    <ClInclude Include="modules\tango-gl-renderer\camera.h" />
+    <ClInclude Include="modules\tango-gl-renderer\cone.h" />
+    <ClInclude Include="modules\tango-gl-renderer\cube.h" />
+    <ClInclude Include="modules\tango-gl-renderer\drawable_object.h" />
+    <ClInclude Include="modules\tango-gl-renderer\frustum.h" />
+    <ClInclude Include="modules\tango-gl-renderer\GlUtil.h" />
+    <ClInclude Include="modules\tango-gl-renderer\grid.h" />
+    <ClInclude Include="modules\tango-gl-renderer\polygon.h" />
+    <ClInclude Include="modules\tango-gl-renderer\trace.h" />
+    <ClInclude Include="modules\tango-gl-renderer\transform.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FBAD6B95-514E-4BB0-AF97-952B005D87A0}</ProjectGuid>
+    <RootNamespace>OddTangoUpsample</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug|Tegra-Android'">
+    <AndroidTargetAPI>android-19</AndroidTargetAPI>
+    <AndroidNativeAPI>UseTarget</AndroidNativeAPI>
+    <AndroidMinAPI>android-19</AndroidMinAPI>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
+    <AndroidTargetAPI>android-19</AndroidTargetAPI>
+    <AndroidNativeAPI>UseTarget</AndroidNativeAPI>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='profile|Tegra-Android'">
+    <AndroidTargetAPI>android-19</AndroidTargetAPI>
+    <AndroidNativeAPI>UseTarget</AndroidNativeAPI>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|Tegra-Android'">
+    <OutDir>$(ProjectDir)\__build\$(ProjectName)\$(PlatConf)\</OutDir>
+    <IntDir>$(ProjectDir)\__build\$(ProjectName)\$(PlatConf)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
+    <OutDir>$(ProjectDir)\__build\$(ProjectName)\$(PlatConf)\</OutDir>
+    <IntDir>$(ProjectDir)\__build\$(ProjectName)\$(PlatConf)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='profile|Tegra-Android'">
+    <OutDir>$(ProjectDir)\__build\$(ProjectName)\$(PlatConf)\</OutDir>
+    <IntDir>$(ProjectDir)\__build\$(ProjectName)\$(PlatConf)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|Tegra-Android'">
+    <ClCompile>
+      <PreprocessorDefinitions>DISABLE_IMPORTGL</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>jni;third/inc;modules;modules\tango-gl-renderer\include;..\..\libraries\oddbase\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Wno-non-template-friend %(AdditionalOptions)</AdditionalOptions>
+      <WarningsAsErrors>false</WarningsAsErrors>
+      <CppLanguageStandard>
+      </CppLanguageStandard>
+    </ClCompile>
+    <Link>
+      <AndroidSystemLibs>c;m;log;gcc;android;EGL;GLESv3;z</AndroidSystemLibs>
+      <AdditionalLibraryDirectories>third/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>tango_client_api</AdditionalDependencies>
+      <ReportUndefinedSymbols>false</ReportUndefinedSymbols>
+      <EchoCommandLines>true</EchoCommandLines>
+    </Link>
+    <AntBuild>
+      <AntBuildPath>$(ProjectDir)\</AntBuildPath>
+      <NativeLibDirectories>third/lib;%(NativeLibDirectories)</NativeLibDirectories>
+      <NativeLibDependencies>libtango_client_api.so</NativeLibDependencies>
+      <JavaSourceDir>src;%(JavaSourceDir)</JavaSourceDir>
+      <JarDirectories>
+      </JarDirectories>
+    </AntBuild>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='profile|Tegra-Android'">
+    <ClCompile>
+      <PreprocessorDefinitions>DISABLE_IMPORTGL</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AndroidSystemLibs>c;m;log;gcc;android;EGL;GLESv3</AndroidSystemLibs>
+      <ReportUndefinedSymbols>false</ReportUndefinedSymbols>
+    </Link>
+    <AntBuild>
+      <AntBuildPath>$(ProjectDir)\__build\$(ProjectName)\$(PlatConf)</AntBuildPath>
+    </AntBuild>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>jni;third/inc;modules;modules\tango-gl-renderer\include;..\..\libraries\oddbase\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CppLanguageStandard>c++11</CppLanguageStandard>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>third/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Link>
+      <EchoCommandLines>true</EchoCommandLines>
+      <AndroidSystemLibs>c;m;log;gcc;android;EGL;GLESv3</AndroidSystemLibs>
+      <AdditionalDependencies>tango_client_api</AdditionalDependencies>
+    </Link>
+    <AntBuild>
+      <AntBuildPath>$(ProjectDir)\</AntBuildPath>
+      <JavaSourceDir>src;%(JavaSourceDir)</JavaSourceDir>
+      <NativeLibDirectories>third/lib;%(NativeLibDirectories)</NativeLibDirectories>
+      <NativeLibDependencies>libtango_client_api.so</NativeLibDependencies>
+    </AntBuild>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,232 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="res">
+      <UniqueIdentifier>7326187b-cc59-45fb-8eac-95a1e478eea7</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\values">
+      <UniqueIdentifier>6a5e00d9-748b-4b4c-b735-053f19b29ceb</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{9ae49cbb-c4ee-481d-ba43-97afdcce31d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="jni">
+      <UniqueIdentifier>08587c78-51fd-46aa-bc38-127e34716efc</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\values\strings.xml">
+      <Filter>res\values</Filter>
+    </None>
+    <None Include="res\values\dimens.xml">
+      <Filter>res\values</Filter>
+    </None>
+    <None Include="res\values\styles.xml">
+      <Filter>res\values</Filter>
+    </None>
+    <None Include="res\drawable-xxhdpi\ic_launcher.png">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\values\dimens.xml">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\values-w820dp\dimens.xml">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values-v11\styles.xml">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\values-v14\styles.xml">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\values\dimens.xml">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\layout\tango_upsample.xml">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\values\dimens.xml">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="modules/tango-gl-renderer/ar_ruler.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="modules/tango-gl-renderer/axis.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="modules/tango-gl-renderer/camera.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="modules/tango-gl-renderer/cube.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="modules/tango-gl-renderer/frustum.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="modules/tango-gl-renderer/grid.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="modules/tango-gl-renderer/trace.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="modules/tango-gl-renderer/transform.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="modules/tango-gl-renderer/MaterialShaders.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="modules/tango-gl-renderer/GlMaterial.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\GlBilateralGrid.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\GlPointcloud.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni/Tango.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni/TangoUpsampleNative.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\GlVideoOverlay.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="modules/tango-gl-renderer/GlUtil.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\GlQuad.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\GlPlaneMesh.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\GlPointcloudRenderer.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\GlDepthUpsampler.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <JCompile Include="src\com\odd\TangoUpsample\TangoUpsampleNative.java">
+      <Filter>src</Filter>
+    </JCompile>
+    <JCompile Include="src\com\odd\TangoUpsample\TangoUpsampleRenderer.java">
+      <Filter>src</Filter>
+    </JCompile>
+    <JCompile Include="src\com\odd\TangoUpsample\TangoUpsampleActivity.java">
+      <Filter>src</Filter>
+    </JCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidBuild Include="AndroidManifest.xml" />
+    <AndroidBuild Include="local.properties" />
+    <AndroidBuild Include="proguard.cfg" />
+    <AndroidBuild Include="project.properties" />
+    <AndroidBuild Include="build.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="modules\tango-gl-renderer\MaterialShaders.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\frustum.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\drawable_object.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\cube.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\cone.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\camera.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\band.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\axis.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\ar_ruler.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\polygon.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\grid.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\trace.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\transform.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\GlMaterial.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="modules\tango-gl-renderer\GlUtil.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\TangoRenderer.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\GlBilateralGrid.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\GlPointcloud.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\Tango.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\GlVideoOverlay.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\GlQuad.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\GlPlaneMesh.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\TangoUpsampleUtil.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\GlPointcloudRenderer.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\GlDepthUpsampler.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
