@@ -2,7 +2,6 @@
 #ifndef GLDEPTHUPSAMPLER_H
 #define GLDEPTHUPSAMPLER_H
 
-#include "GlPointcloudRenderer.h"
 #include "GlBilateralGrid.h"
 
 class GlDepthUpsampler
