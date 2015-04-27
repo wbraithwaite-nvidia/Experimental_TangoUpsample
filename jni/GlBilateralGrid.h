@@ -16,10 +16,10 @@ public:
 	void setup(const glm::vec4& inputSize, const glm::vec4& sigma, const glm::vec4& padding = glm::vec4(0));
 
 	void clear();
-	void splatRgbd(const GlTexture& srcRgbdTexture, float inputTime=0.0, float weight=1.0);
+	void splatRgbd(const GlTexturePtr& srcRgbdTexture, float inputTime=0.0, float weight=1.0);
 	void splatRgbAndDepth(GLuint srcColorTextureId, GLuint srcDepthTextureId, float inputTime=0.0, float weight=1.0);
-	void slice(GLuint srcTextureId, const GlTexture& dstTexture);
-	void sliceMerge(const GlTexture& refRgbTexture, const GlTexture& prevUpsampleTexture, const GlTexture& rgbdTexture, const GlTexture& resultRgbdTexture);
+	void slice(GLuint srcTextureId, const GlTexturePtr& dstTexture);
+	void sliceMerge(const GlTexturePtr& refRgbTexture, const GlTexturePtr& prevUpsampleTexture, const GlTexturePtr& rgbdTexture, const GlTexturePtr& resultRgbdTexture);
 
 private:
 
@@ -33,10 +33,10 @@ public:
 	int gridSize[4];
 	int gridRasterWidth, gridRasterHeight;
 
-	GlTexture gridTextures_[2];
+	GlTexturePtr gridTextures_[2];
 	GlPlaneMesh* gridMesh_;
 	GlQuad* quad_;
-	GlFramebuffer fbo_;
+	GlFramebufferPtr fbo_;
 
 	GlMaterial bilateralSplatRgbd_;
 	GlMaterial bilateralSplat_;

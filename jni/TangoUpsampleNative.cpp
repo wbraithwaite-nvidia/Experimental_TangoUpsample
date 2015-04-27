@@ -23,8 +23,8 @@
 #include "Tango.h"
 #include "TangoRenderer.h"
 
-#define POINTCLOUD_RESX 512
-#define POINTCLOUD_RESY 512
+#define POINTCLOUD_RESX 256
+#define POINTCLOUD_RESY 256
 #define NUM_LEVELS 6
 
 const float kZero = 0.0f;
@@ -174,26 +174,18 @@ bool setupGlResources()
 	// create the tango source objects...
 
 	imuData = new ImuViewData();
-	imuData->setName("imu");
-
 	colorData = new ColorViewData();
-	colorData->setName("color");
-
 	pointCloudData = new PointCloudViewData();
-	pointCloudData->setName("pointcloud");
-
-	depthData = new DepthViewData();
-	depthData->setName("depth");
-
 	fisheyeData = new FisheyeViewData();
-	fisheyeData->setName("fisheye");
-
-	warpedData = new WarpedViewData();
-	warpedData->setName("warped");
+	//warpedData = new WarpedViewData();
+	depthData = new DepthViewData();
 
 	depthUpsampler = new GlDepthUpsampler();
 
 	pointCloudRenderer = new GlPointcloudRenderer(POINTCLOUD_RESX, POINTCLOUD_RESY, NUM_LEVELS);
+
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_BLEND);
 
 	return true;
 }
@@ -224,6 +216,48 @@ bool render(int portWidth, int portHeight)
 	ensureViewData();
 	updateViewData();
 
+	if (pointCloudData && colorData)
+	{
+		if (pointCloudData->lastUpdateId != tango.pointcloud.updateId)
+		{
+			pointCloudData->lastUpdateId = tango.pointcloud.updateId;
+
+			// store a snapshot of the current hi-res color values in the pointcloud vertices
+			// by inverse mapping the colorData into the pointcloud.
+			// this is sparse, only storing a single color value for each point.
+
+			pointCloudData->pointclouds->updateColorsFromTexture(
+				colorData->texture->id, colorData->viewProjectionMat, colorData->viewToWorldMat);
+		}
+	}
+
+	if (depthUpsampler)
+	{
+		// ensure the depthupsampler is the right format.
+		depthUpsampler->setup(POINTCLOUD_RESX, POINTCLOUD_RESY, NUM_LEVELS);
+
+		if (colorData)
+		{
+			depthUpsampler->updateColorPyramid(colorData->texture);
+		}
+
+		if (pointCloudData)
+		{
+			// BUG: this fails with imuData (probably because of a bad projection matrix!)
+			depthData->viewProjectionMat = colorData->viewProjectionMat;
+			depthData->viewToWorldMat = imuData->viewToWorldMat;
+
+			depthUpsampler->renderPointcloudToTexture(
+				pointCloudData->pointclouds, 
+				depthData->viewProjectionMat, glm::inverse(depthData->viewToWorldMat), pointCloudData->pointclouds->defaultMaterial);
+
+			depthUpsampler->updateRgbdPyramid(depthUpsampler->pointcloudColorTexture_, depthUpsampler->pointcloudDepthTexture_);
+
+			depthUpsampler->upsampleRgbd();
+		}
+	}
+
+	/*
 	if (depthData && pointCloudData)
 	{
 		bool depthUpdated = false;
@@ -278,6 +312,7 @@ bool render(int portWidth, int portHeight)
 			depthUpsampler->upsampleRgbd();
 		}
 	}
+	*/
 
 	// prepare GL...
 	glEnable(GL_DEPTH_TEST);
@@ -295,11 +330,16 @@ bool render(int portWidth, int portHeight)
 		int camSubMode = cameraSubType[camera_type] % 2;
 
 		std::vector<ViewData*> views;
-		views.push_back(imuData);
-		views.push_back(colorData);
-		views.push_back(fisheyeData);
-		views.push_back(pointCloudData);
-		views.push_back(depthData);
+		if (imuData)
+			views.push_back(imuData);
+		if (colorData)
+			views.push_back(colorData);
+		if (fisheyeData)
+			views.push_back(fisheyeData);
+		if (pointCloudData)
+			views.push_back(pointCloudData);
+		if (depthData)
+			views.push_back(depthData);
 
 		int numItems = views.size();
 		int itemWidth = portWidth;
@@ -328,9 +368,11 @@ bool render(int portWidth, int portHeight)
 				{
 					if (camSubMode == 0)
 					{
-						setupViewport(xoffset, yoffset, cellWidth, cellHeight, views[i]->apertureRatio);
+						glViewport(xoffset, yoffset, cellWidth, cellHeight);
+						//setupViewport(xoffset, yoffset, cellWidth, cellHeight, views[i]->apertureRatio);
 
 						views[i]->render();
+
 						projection_mat = views[i]->viewProjectionMat;
 						view_mat = glm::inverse(views[i]->viewToWorldMat);
 					}
@@ -359,11 +401,12 @@ bool render(int portWidth, int portHeight)
 	}
 	else
 	{
-		setupViewport(0, 0, portWidth, portHeight, 1.0);
+		//setupViewport(0, 0, portWidth, portHeight, portWidth/portHeight);
+		glViewport(0, 0, portWidth, portHeight);
 
 		if (camera_type == FIRST_PERSON_COLOR)
 		{
-			int camSubMode = cameraSubType[camera_type] % (1+depthUpsampler->numLevels_);
+			int camSubMode = cameraSubType[camera_type] % (1 + ((depthUpsampler)?depthUpsampler->numLevels_:0));
 
 			if (camSubMode == 0)
 			{
@@ -371,8 +414,7 @@ bool render(int portWidth, int portHeight)
 				{
 					//setupViewport(0, 0, portWidth, portHeight, colorData->apertureRatio);
 					colorData->renderTextureLod(colorData->texture, 0);
-					//colorData->renderTexture(colorData->prefilteredTexture->id); // testing
-					//colorData->renderTextureLod(colorData->texture, 2); // testing
+
 					projection_mat = colorData->viewProjectionMat;
 					view_mat = glm::inverse(colorData->viewToWorldMat);
 				}
@@ -380,18 +422,19 @@ bool render(int portWidth, int portHeight)
 			else
 			{
 				int level = camSubMode - 1;
-				if (depthData)
+				if (colorData && depthUpsampler)
 				{
-					//setupViewport(0, 0, depthUpsampler->width_ * 2, depthUpsampler->height_ * 2, 1);
-					depthData->renderTexture(depthUpsampler->colorTexturePyramid_[level]->id);
-					projection_mat = depthData->viewProjectionMat;
-					view_mat = glm::inverse(depthData->viewToWorldMat);
+					//setupViewport(0, 0, depthUpsampler->width_, depthUpsampler->height_, 1.0);
+					colorData->renderTexture(depthUpsampler->colorTexturePyramid_[level]->id);
+
+					projection_mat = colorData->viewProjectionMat;
+					view_mat = glm::inverse(colorData->viewToWorldMat);
 				}
 			}
 		}
 		else if (camera_type == FIRST_PERSON_FISHEYE)
 		{
-			int camSubMode = cameraSubType[camera_type] % (1+depthUpsampler->numLevels_);
+			int camSubMode = cameraSubType[camera_type] % (1);
 
 			if (camSubMode == 0)
 			{
@@ -399,30 +442,48 @@ bool render(int portWidth, int portHeight)
 				{
 					//setupViewport(0, 0, portWidth, portHeight, fisheyeData->apertureRatio);
 					fisheyeData->render();
+
 					projection_mat = fisheyeData->viewProjectionMat;
 					view_mat = glm::inverse(fisheyeData->viewToWorldMat);
-				}
-			}
-			else
-			{
-				int level = camSubMode - 1;
-
-				if (depthData)
-				{
-					//setupViewport(0, 0, depthUpsampler->width_ * 2, depthUpsampler->height_ * 2, 1);
-					depthData->renderTexture(depthUpsampler->depthTexturePyramid_[level]->id);
-					projection_mat = depthData->viewProjectionMat;
-					view_mat = glm::inverse(depthData->viewToWorldMat);
 				}
 			}
 		}
 		else if (camera_type == FIRST_PERSON_POINTCLOUD)
 		{
-			int camSubMode = cameraSubType[camera_type] % (0+depthUpsampler->numLevels_);
+			int camSubMode = cameraSubType[camera_type] % (1 + ((depthUpsampler)?depthUpsampler->numLevels_:0));
 
-			int level = camSubMode - 0;
-
+			if (camSubMode == 0)
 			{
+				pointCloudData->pointclouds->render(depthData->viewProjectionMat, glm::inverse(depthData->viewToWorldMat), pointCloudData->pointclouds->defaultMaterial, 5.0);
+
+				projection_mat = depthData->viewProjectionMat;
+				view_mat = glm::inverse(depthData->viewToWorldMat);
+			}
+			else
+			{
+				int level = camSubMode - 1;
+
+				if (depthData && depthUpsampler)
+				{
+					//depthData->renderTexture(depthUpsampler->depthTexturePyramid_[level]->id);
+					//depthData->renderTexture(depthUpsampler->depthUpsampleTexture_[level]->id);
+					//depthData->renderTexture(depthUpsampler->bilateralGrids_[0]->gridTextures_[1]->id);
+
+					glUseProgram(depthData->showDepthMaterial_.shader_program_);
+					GLuint srcClipRangeLoc_ = glGetUniformLocation(depthData->showDepthMaterial_.shader_program_, "srcClipRange");
+					GLuint srcImageTypeLoc_ = glGetUniformLocation(depthData->showDepthMaterial_.shader_program_, "srcImageType");
+					GLuint srcDepthTypeLoc_ = glGetUniformLocation(depthData->showDepthMaterial_.shader_program_, "srcDepthType");
+					glUniform1i(srcImageTypeLoc_, 1); // rgbd image
+					glUniform1i(srcDepthTypeLoc_, 0); // depth is in fragment-space
+					glUniform2f(srcClipRangeLoc_, pointCloudData->nearDistance, pointCloudData->farDistance); // this is fixed.
+
+					depthData->renderTexture(depthUpsampler->depthUpsampleTexture_[0]->id, &depthData->showDepthMaterial_);
+					projection_mat = depthData->viewProjectionMat;
+					view_mat = glm::inverse(depthData->viewToWorldMat);
+				}
+			}
+
+			/*{
 				if (depthData)
 				{
 					//setupViewport(0, 0, depthUpsampler->width_ * 2, depthUpsampler->height_ * 2, 1);
@@ -430,7 +491,7 @@ bool render(int portWidth, int portHeight)
 					projection_mat = depthData->viewProjectionMat;
 					view_mat = glm::inverse(depthData->viewToWorldMat);
 				}
-			}
+			}*/
 			/*
 
 			int camSubMode = cameraSubType[camera_type] % 6;
@@ -642,10 +703,10 @@ extern "C" {
 
 	JNIEXPORT void JNICALL
 		Java_com_odd_TangoUpsample_TangoUpsampleNative_setupConfig(
-		JNIEnv*, jobject, bool is_auto_recovery, bool useDepth)
+		JNIEnv*, jobject, bool useAutoRecovery, bool useColorCamera, bool useDepthCamera)
 	{
 		setupTango();
-		if (!TangoData::instance().setConfig(is_auto_recovery, useDepth))
+		if (!TangoData::instance().setConfig(useAutoRecovery, useColorCamera, useDepthCamera))
 		{
 			LOGE("Tango set config failed");
 		}
@@ -689,9 +750,9 @@ extern "C" {
 		JNIEnv*, jobject)
 	{
 		setupTango();
-		if (!TangoData::instance().ConnectCallbacks())
+		if (!TangoData::instance().connectCallbacks())
 		{
-			LOGE("Tango ConnectCallbacks failed");
+			LOGE("Tango connectCallbacks failed");
 		}
 	}
 

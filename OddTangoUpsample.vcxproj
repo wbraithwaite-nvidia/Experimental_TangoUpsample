@@ -139,7 +139,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|Tegra-Android'">
     <ClCompile>
       <PreprocessorDefinitions>DISABLE_IMPORTGL</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>jni;third/inc;modules;modules\tango-gl-renderer\include;..\..\libraries\oddbase\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>jni;third/inc;modules;modules\tango-gl-renderer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Wno-non-template-friend %(AdditionalOptions)</AdditionalOptions>
       <WarningsAsErrors>false</WarningsAsErrors>
       <CppLanguageStandard>
@@ -164,6 +164,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='profile|Tegra-Android'">
     <ClCompile>
       <PreprocessorDefinitions>DISABLE_IMPORTGL</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>jni;third/inc;modules;modules\tango-gl-renderer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AndroidSystemLibs>c;m;log;gcc;android;EGL;GLESv3</AndroidSystemLibs>
@@ -175,7 +176,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
     <ClCompile>
-      <AdditionalIncludeDirectories>jni;third/inc;modules;modules\tango-gl-renderer\include;..\..\libraries\oddbase\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>jni;third/inc;modules;modules\tango-gl-renderer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStandard>c++11</CppLanguageStandard>
     </ClCompile>
     <Link>

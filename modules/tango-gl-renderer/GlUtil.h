@@ -56,7 +56,9 @@
 #define RADIAN_2_DEGREE 57.2957795f
 #define DEGREE_2_RADIANS 0.0174532925f
 
-class GlTextureImpl
+#define GL_CHECKERRORS(msg) GlUtil::CheckGlError(msg, __FILE__,__LINE__)
+
+class GlTexture
 {
 public:
 
@@ -65,76 +67,76 @@ public:
 	int width, height;
 	GLenum internalType;
 
-	~GlTextureImpl();
+	~GlTexture();
 
 	
 private:
-	GlTextureImpl();
-	GlTextureImpl(const GlTextureImpl&);
+	GlTexture();
+	GlTexture(const GlTexture&);
 
-	friend class GlTexture;
+	friend class GlTexturePtr;
 };
 
-class GlTexture : public SharedPtr<GlTextureImpl>
+class GlTexturePtr : public SharedPtr<GlTexture>
 {
-	typedef SharedPtr<GlTextureImpl> Ptr;
+	typedef SharedPtr<GlTexture> Ptr;
 public:
-	GlTexture() {}
-	explicit GlTexture(Ptr d) : Ptr(d) {}
-	static GlTexture create(GLenum target = GL_TEXTURE_2D, int width = 256, int height = 256, GLenum internalType = GL_RGBA8, int numMipmaps=1);
+	GlTexturePtr() {}
+	explicit GlTexturePtr(Ptr d) : Ptr(d) {}
+	static GlTexturePtr create(GLenum target = GL_TEXTURE_2D, int width = 256, int height = 256, GLenum internalType = GL_RGBA8, int numMipmaps=1);
 };
 
-class GlFramebufferImpl
-{
-public:
-	GLuint id;
-
-	~GlFramebufferImpl();
-
-private:
-	GlFramebufferImpl();
-	GlFramebufferImpl(const GlFramebufferImpl&);
-
-	friend class GlFramebuffer;
-};
-
-class GlFramebuffer : public SharedPtr<GlFramebufferImpl>
-{
-	typedef SharedPtr<GlFramebufferImpl> Ptr;
-public:
-	GlFramebuffer() {}
-	explicit GlFramebuffer(Ptr d) : Ptr(d) {}
-	static GlFramebuffer create();
-};
-
-class GlTransformFeedbackImpl
+class GlFramebuffer
 {
 public:
 	GLuint id;
 
-	~GlTransformFeedbackImpl();
+	~GlFramebuffer();
 
 private:
-	GlTransformFeedbackImpl();
-	GlTransformFeedbackImpl(const GlTransformFeedbackImpl&);
+	GlFramebuffer();
+	GlFramebuffer(const GlFramebuffer&);
 
-	friend class GlTransformFeedback;
+	friend class GlFramebufferPtr;
 };
 
-class GlTransformFeedback : public SharedPtr<GlTransformFeedbackImpl>
+class GlFramebufferPtr : public SharedPtr<GlFramebuffer>
 {
-	typedef SharedPtr<GlTransformFeedbackImpl> Ptr;
+	typedef SharedPtr<GlFramebuffer> Ptr;
 public:
-	GlTransformFeedback() {}
-	explicit GlTransformFeedback(Ptr d) : Ptr(d) {}
-	static GlTransformFeedback create();
+	GlFramebufferPtr() {}
+	explicit GlFramebufferPtr(Ptr d) : Ptr(d) {}
+	static GlFramebufferPtr create();
+};
+
+class GlTransformFeedback
+{
+public:
+	GLuint id;
+
+	~GlTransformFeedback();
+
+private:
+	GlTransformFeedback();
+	GlTransformFeedback(const GlTransformFeedback&);
+
+	friend class GlTransformFeedbackPtr;
+};
+
+class GlTransformFeedbackPtr : public SharedPtr<GlTransformFeedback>
+{
+	typedef SharedPtr<GlTransformFeedback> Ptr;
+public:
+	GlTransformFeedbackPtr() {}
+	explicit GlTransformFeedbackPtr(Ptr d) : Ptr(d) {}
+	static GlTransformFeedbackPtr create();
 };
 
 
 class GlUtil {
 public:
 	static bool checkFramebuffer();
-	static void CheckGlError(const char* operation);
+	static void CheckGlError(const char* operation,const char* file=0,int line=-1);
 	static GLuint CreateProgram(const char* vertex_source, const char* fragment_source);
 	static bool LinkProgram(GLuint& program);
 	static GLuint createTexture(GLenum target = GL_TEXTURE_2D, int width = 256, int height = 256, GLenum internalType = GL_RGBA8, int numMipmaps=1);

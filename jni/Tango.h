@@ -93,15 +93,18 @@ public:
 	~TangoData();
 
 	TangoErrorType initialize(JNIEnv* env, jobject activity);
-	bool setConfig(bool isAutoReset, bool useDepth);
+	bool setConfig(bool useAutoRecovery, bool useColorCamera, bool useDepthCamera);
 	TangoErrorType Connect();
-	bool ConnectCallbacks();
 	void Disconnect();
 
+	// connect our functions to pose and xyzij callbacks.
+	bool connectCallbacks();
+	// connect our GL textures to the camera data.
+	void connectTextures(GLuint colorTextureId, GLuint fisheyeTextureId);
+	
 	void ResetMotionTracking();
 
-	// connect GL textures to the camera data.
-	void connectTextures(GLuint colorTextureId, GLuint fisheyeTextureId);
+
 
 	// setup the matrices from the current pose.
 	bool GetExtrinsics();
@@ -116,9 +119,9 @@ public:
 
 
 	// update all the data.
-	void updateColorData();
-	void updateFisheyeData();
-	void updateViewData();
+	bool updateColorData();
+	bool updateFisheyeData();
+	bool updateViewData();
 	bool updatePointcloudData();
 
 	std::string getStatusString();

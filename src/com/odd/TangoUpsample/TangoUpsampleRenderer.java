@@ -19,8 +19,9 @@ public class TangoUpsampleRenderer
 
     public TangoUpsampleActivity	activity;
 	public int						width_ = 0, height_ = 0;
-    public boolean					isAutoRecovery = true;
-	public boolean					useDepth = true;
+    public boolean					useAutoRecovery = true;
+	public boolean					useDepthCamera = true;
+	public boolean					useColorCamera = true;
 
 
     public void onDrawFrame(GL10 gl) 
@@ -48,7 +49,7 @@ public class TangoUpsampleRenderer
 
 		// this has to be here, because the initialization requires GL resources to exist.
         TangoUpsampleNative.initialize(activity);
-        TangoUpsampleNative.setupConfig(isAutoRecovery, useDepth);
+        TangoUpsampleNative.setupConfig(useAutoRecovery, useColorCamera, useDepthCamera);
     }
 
 	public void notifyPausing() 

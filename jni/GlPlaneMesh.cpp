@@ -11,20 +11,20 @@ GlPlaneMesh::GlPlaneMesh(int width, int height)
 	glGenBuffers(1, vertex_buffers);
 
 	std::vector<float> data;
-	data.reserve(width_*height_ * 3);
+	data.reserve(width_*height_ * 4);
 	for (int y = 0, i = 0; y < height; ++y)
 	{
 		for (int x = 0; x < width; ++x, ++i)
 		{
-			data[i * 3 + 0] = (float(x)+0.5) / width;
-			data[i * 3 + 1] = (float(y)+0.5) / height;
-			data[i * 3 + 2] = 0.5;
+			data[i * 4 + 0] = (float(x)+0.5) / width;
+			data[i * 4 + 1] = (float(y)+0.5) / height;
+			data[i * 4 + 2] = 0.5;
 		}
 	}
 
 	// Allocate vertices buffer.
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * width*height, &data[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4 * width*height, &data[0], GL_STATIC_DRAW);
 
 	/*
 	// Allocate triangle indices buffer.
@@ -58,7 +58,7 @@ void GlPlaneMesh::render(
 	// Bind vertices buffer.
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[0]);
 	glEnableVertexAttribArray(mat.attrib_vertices_);
-	glVertexAttribPointer(mat.attrib_vertices_, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(mat.attrib_vertices_, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
 	/*
 	// Bind texture coordinates buffer.
@@ -72,10 +72,10 @@ void GlPlaneMesh::render(
 	*/
 
 	glDrawArrays(GL_POINTS, 0, width_*height_);
-	GlUtil::CheckGlError("glDrawElements");
+	GL_CHECKERRORS("glDrawArrays");
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glUseProgram(0);
-	GlUtil::CheckGlError("glUseProgram()");
+	GL_CHECKERRORS("glUseProgram()");
 }

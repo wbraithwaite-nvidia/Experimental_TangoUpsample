@@ -8,7 +8,7 @@ public class TangoUpsampleNative
     }
 
     public static native int initialize(TangoUpsampleActivity activity);
-    public static native void setupConfig(boolean isAutoRecovery, boolean useDepth);
+    public static native void setupConfig(boolean useAutoRecovery, boolean useColorCamera, boolean useDepthCamera);
 
     public static native void connectTexture();
     public static native int connectCallbacks();

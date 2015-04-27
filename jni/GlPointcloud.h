@@ -17,16 +17,17 @@ public:
 	~GlPointcloud();
 
 	// render the pointcloud from a pose.
-	void render(glm::mat4 projection_mat, glm::mat4 view_mat, const GlMaterial& mat, float pointSize);
+	void render(glm::mat4 projection_mat, glm::mat4 view_mat, const GlMaterial& mat, float pointSize=1.0, float width=0.0, float height=0.0);
 	// update positions from a sysmem buffer.
 	void updatePositions(int numPoints, float* buffer, const glm::mat4& viewToWorldMat);
 	// use gl transform feedback to populate the vertex color buffer with texture values.
 	void updateColorsFromTexture(GLuint colorTextureId, const glm::mat4& colorViewProjMat, const glm::mat4& colorViewToWorldMat);
 
 	GlMaterial defaultMaterial;		// default material to render colored pointcloud.
+	GlMaterial setRgbdMaterial;
 
 private:
-	GlTransformFeedback tf_;		// transformfeedback object.
+	GlTransformFeedbackPtr tf_;		// transformfeedback object.
 	GlMaterial tfMaterial_;			// transformfeedback material.
 	GLuint vbos_[2];				// vertex buffers.
 	int numPoints_;					// last updated point count.

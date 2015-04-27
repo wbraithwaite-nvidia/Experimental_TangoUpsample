@@ -465,12 +465,12 @@ float linearizeFragDepth(float fragDepth, float n, float f)
 void main()
 {
 	vec4 texel = texture2D(texture0, fTexCoords.xy);
-	float depth = texel.r;
+	float depth = texel[0];
 	if (srcImageType == 1)
 		depth = texel.a;
 
 	// CAVEAT: if depth is zero, then assume zero alpha too!
-	if (depth <= 0.0 || depth >= 1.0)
+	if (depth <= 0.0)// || depth >= 1.0)
 	{
 		gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
 		gl_FragDepth = 0.0;
@@ -502,7 +502,7 @@ in vec2 fTexCoords;
 void main()
 { 
 	// NB. gl_FragCoord is for a half-size viewport.
-	ivec2 coord = ivec2(gl_FragCoord.xy-vec2(0.5,0.5))*ivec2(2);
+	ivec2 coord = ivec2(gl_FragCoord.xy-vec2(0.5))*ivec2(2);
 	
 	vec4 ll = texelFetch(texture0, coord, 0); 
 	vec4 lr = texelFetchOffset(texture0, coord, 0, ivec2(1, 0)); 

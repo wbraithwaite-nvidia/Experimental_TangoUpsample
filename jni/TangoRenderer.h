@@ -92,20 +92,17 @@ public:
 		nearDistance = n;
 		farDistance = f;
 
-		CT5(apertureWidth, apertureHeight, fieldOfView, nearDistance, farDistance);
+		//CT5(apertureWidth, apertureHeight, fieldOfView, nearDistance, farDistance);
 
 		focalLength = (0.5 * apertureWidth) / tan(hfov * 0.5);
 		apertureRatio = apertureWidth / apertureHeight;
 
 		float xmax = nearDistance * (0.5 * apertureWidth / focalLength);
 		float xmin = -xmax;
-		float ymax = xmax / apertureRatio;	
+		float ymax = xmax / apertureRatio;
 		float ymin = -ymax;
 
-		viewProjectionMat = glm::frustum(
-			xmin, xmax,
-			ymin, ymax,
-			nearDistance, farDistance);
+		viewProjectionMat = glm::frustum(xmin, xmax, ymin, ymax, nearDistance, farDistance);
 	}
 
 
@@ -197,7 +194,7 @@ public:
 		if (texture && texture->width == w && texture->height == h)
 			return;
 
-		texture = GlTexture::create(GL_TEXTURE_2D, w, h, internalType, numMipmaps);
+		texture = GlTexturePtr::create(GL_TEXTURE_2D, w, h, internalType, numMipmaps);
 
 
 		delete material;
@@ -242,14 +239,16 @@ public:
 		glUseProgram(0);
 	}
 
-	void renderTextureLod(const GlTexture& texture, int lod)
+	void renderTextureLod(const GlTexturePtr& texture, int lod)
 	{
+		glDisable(GL_DEPTH_TEST);
 		glBindTexture(GL_TEXTURE_2D, texture->id);
 		glUseProgram(lodMaterial_.shader_program_);
 		GLuint loc = glGetUniformLocation(lodMaterial_.shader_program_, "lod");
 		glUniform1f(loc, lod);
 		geometry->render(glm::mat4(1.0f), glm::mat4(1.0f), lodMaterial_);
 		glBindTexture(GL_TEXTURE_2D, 0);
+		glEnable(GL_DEPTH_TEST);
 		glUseProgram(0);
 	}
 
@@ -321,59 +320,7 @@ public:
 	GlMaterial* material;
 	GlQuad* geometry;
 public:
-	GlTexture texture;
-};
-
-class ExternalTextureViewData : public ViewData
-{
-public:
-
-	ExternalTextureViewData()
-		:
-		material_(vs_simpleTexture, fs_simpleTextureExternal)
-	{
-		geometry = new GlQuad();
-		geometry->SetParent(transform);
-		externalTextureId_ = GlUtil::createTexture(GL_TEXTURE_EXTERNAL_OES);
-	}
-
-	virtual ~ExternalTextureViewData()
-	{
-		glDeleteTextures(1, &externalTextureId_);
-		delete geometry;
-		geometry = 0;
-	}
-
-	virtual GLuint getTextureId()
-	{
-		return externalTextureId_;
-	}
-
-	virtual void render()
-	{
-		glDisable(GL_DEPTH_TEST);
-		glBindTexture(GL_TEXTURE_EXTERNAL_OES, getTextureId());
-		geometry->render(glm::mat4(1.0f), glm::mat4(1.0f), material_);
-		glBindTexture(GL_TEXTURE_EXTERNAL_OES, 0);
-		glEnable(GL_DEPTH_TEST);
-		glUseProgram(0);
-	}
-
-	virtual void drawCamera(const glm::mat4& viewMat, const glm::mat4& viewProjMat)
-	{
-		ViewData::drawCamera(viewMat, viewProjMat);
-
-		glBindTexture(GL_TEXTURE_EXTERNAL_OES, getTextureId());
-		geometry->render(viewProjMat, viewMat, material_);
-		glBindTexture(GL_TEXTURE_EXTERNAL_OES, 0);
-		glUseProgram(0);
-	}
-
-protected:
-
-	GlMaterial material_;
-	GlQuad* geometry;
-	GLuint externalTextureId_;
+	GlTexturePtr texture;
 };
 
 class FisheyeViewData : public TextureViewData
@@ -401,28 +348,6 @@ public:
 
 		ViewData::setup(w, h, fov, n, f);
 
-		/*
-		
-
-		apertureWidth = static_cast<float>(tango.fisheye.cc_width);
-		apertureHeight = static_cast<float>(tango.fisheye.cc_height);
-		focalLength = static_cast<float>(tango.fisheye.cc_fx);
-		apertureRatio = apertureHeight / apertureWidth;
-
-		nearDistance = kCamViewMinDist;
-		farDistance = kCamViewMaxDist;
-
-		float xmax = nearDistance * (0.5 * apertureWidth / focalLength);
-		float xmin = -xmax;
-		float ymax = xmax * apertureRatio;	
-		float ymin = -ymax;
-
-		viewProjectionMat = glm::frustum(
-			xmin, xmax,
-			ymin, ymax,
-			nearDistance, farDistance);
-		*/
-
 		TangoData& tango = TangoData::instance();
 
 		glUseProgram(material_.shader_program_);
@@ -449,12 +374,14 @@ public:
 	virtual void update()
 	{
 		TangoData& tango = TangoData::instance();
-		tango.updateFisheyeData();
+		bool isUpdated = tango.updateFisheyeData();
+
+		if (isUpdated == false)
+			return;
 
 		if (texture)
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
-			//glClear(GL_COLOR_BUFFER_BIT);
 			glViewport(0, 0, texture->width, texture->height);
 			//glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_EXTERNAL_OES, externalTextureId);
@@ -487,7 +414,7 @@ private:
 class ColorViewData : public TextureViewData
 {
 public:
-	GlTexture prefilteredTexture;
+	GlTexturePtr prefilteredTexture;
 
 	ColorViewData()
 		:
@@ -510,28 +437,7 @@ public:
 			return;
 
 		ViewData::setup(w, h, fov, n, f);
-		/*
-		
 
-		apertureWidth = static_cast<float>(tango.color.cc_width);
-		apertureHeight = static_cast<float>(tango.color.cc_height);
-		focalLength = static_cast<float>(tango.color.cc_fx);
-		apertureRatio = apertureHeight / apertureWidth;
-
-		nearDistance = kCamViewMinDist;
-		farDistance = kCamViewMaxDist;
-
-
-		float xmax = nearDistance * (0.5 * apertureWidth / focalLength);
-		float xmin = -xmax;
-		float ymax = xmax * apertureRatio;	
-		float ymin = -ymax;
-
-		viewProjectionMat = glm::frustum(
-			xmin, xmax,
-			ymin, ymax,
-			nearDistance, farDistance);
-		*/
 		TangoData& tango = TangoData::instance();
 		glUseProgram(material_.shader_program_);
 		if (focalLengthLoc_ != -1)
@@ -552,7 +458,7 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		prefilteredTexture = GlTexture::create(GL_TEXTURE_2D, w/4, h/4, GL_RGBA8);
+		prefilteredTexture = GlTexturePtr::create(GL_TEXTURE_2D, w/4, h/4, GL_RGBA8);
 	}
 
 	
@@ -560,7 +466,13 @@ public:
 	virtual void update()
 	{
 		TangoData& tango = TangoData::instance();
-		tango.updateColorData();
+
+		ScopedMutex sm(tango.color.mutex);
+
+		bool isUpdated = tango.updateColorData();
+
+		if (isUpdated == false)
+			return;
 
 		if (texture)
 		{
@@ -568,23 +480,17 @@ public:
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture->id, 0);
 			GlUtil::checkFramebuffer();
 
-			//glClear(GL_COLOR_BUFFER_BIT);
 			glViewport(0, 0, texture->width, texture->height);
-			//glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_EXTERNAL_OES, externalTextureId);
 			geometry->render(glm::mat4(1.0f), glm::mat4(1.0f), material_);
 			glBindTexture(GL_TEXTURE_EXTERNAL_OES, 0);
+
 			glBindTexture(GL_TEXTURE_2D, texture->id);
 			glGenerateMipmap(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, 0);
-		
-			// test the mipmapping!
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, prefilteredTexture->id, 0);
-			GlUtil::checkFramebuffer();
-			glViewport(0, 0, prefilteredTexture->width, prefilteredTexture->height);
-			renderTextureLod(texture, 2);		
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 			glUseProgram(0);
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 
 		viewToWorldMat = tango.getOC2OWMat(tango.color);
@@ -640,13 +546,14 @@ public:
 	{
 		TangoData& tango = TangoData::instance();
 
+		ScopedMutex sm(tango.pointcloud.mutex);
+
 		bool isUpdated = tango.updatePointcloudData();
 
 		if (isUpdated)
 		{
 			// we must lock, because we don't want the depth buffers updated after we get the pose,
 			// and before we have uploaded the data to GL.
-			ScopedMutex sm(tango.pointcloud.mutex);
 
 			viewToWorldMat = tango.getOC2OWMat(tango.pointcloud);
 			// update the camera's current position, rotation, and get the scale...
@@ -709,10 +616,10 @@ public:
 class DepthViewData : public TextureViewData
 {
 public:
-	GlTexture depthTexture;
-	GlTexture rgbdTexture;
-	GlTexture cleanDepthTexture;
-	//GlTexture warpedRgbdTexture;
+	GlTexturePtr depthTexture;
+	GlTexturePtr rgbdTexture;
+	GlTexturePtr cleanDepthTexture;
+	//GlTexturePtr warpedRgbdTexture;
 
 	DepthViewData()
 	{
@@ -746,10 +653,10 @@ public:
 
 		setupTexture(w, h, GL_RGBA32F);
 
-		depthTexture = GlTexture::create(GL_TEXTURE_2D, w, h, GL_DEPTH_COMPONENT32F);
-		rgbdTexture = GlTexture::create(GL_TEXTURE_2D, w, h, GL_RGBA32F);
-		cleanDepthTexture = GlTexture::create(GL_TEXTURE_2D, w, h, GL_RGBA32F);
-		//warpedRgbdTexture = GlTexture::create(GL_TEXTURE_2D, w, h, GL_RGBA32F);
+		depthTexture = GlTexturePtr::create(GL_TEXTURE_2D, w, h, GL_DEPTH_COMPONENT32F);
+		rgbdTexture = GlTexturePtr::create(GL_TEXTURE_2D, w, h, GL_RGBA32F);
+		cleanDepthTexture = GlTexturePtr::create(GL_TEXTURE_2D, w, h, GL_RGBA32F);
+		//warpedRgbdTexture = GlTexturePtr::create(GL_TEXTURE_2D, w, h, GL_RGBA32F);
 
 		glUseProgram(showDepthMaterial_.shader_program_);
 		GLuint srcClipRangeLoc_ = glGetUniformLocation(showDepthMaterial_.shader_program_, "srcClipRange");
@@ -766,8 +673,8 @@ class WarpedViewData : public TextureViewData
 {
 public:
 
-	GlTexture depthTexture;
-	GlTexture cleanTextureRgbd;
+	GlTexturePtr depthTexture;
+	GlTexturePtr cleanTextureRgbd;
 	GlPlaneMesh* mesh_;
 
 	WarpedViewData()
@@ -784,8 +691,8 @@ public:
 
 		setupTexture(w, h, GL_RGBA32F);
 
-		depthTexture = GlTexture::create(GL_TEXTURE_2D, w, h, GL_DEPTH_COMPONENT32F);
-		cleanTextureRgbd = GlTexture::create(GL_TEXTURE_2D, w, h, GL_RGBA32F);
+		depthTexture = GlTexturePtr::create(GL_TEXTURE_2D, w, h, GL_DEPTH_COMPONENT32F);
+		cleanTextureRgbd = GlTexturePtr::create(GL_TEXTURE_2D, w, h, GL_RGBA32F);
 
 		delete mesh_;
 		mesh_ = new GlPlaneMesh(w, h);

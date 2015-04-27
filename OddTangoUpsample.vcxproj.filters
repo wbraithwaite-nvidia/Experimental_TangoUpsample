@@ -71,6 +71,7 @@
     </None>
     <None Include="res\values\dimens.xml" />
     <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="modules/tango-gl-renderer/ar_ruler.cpp">

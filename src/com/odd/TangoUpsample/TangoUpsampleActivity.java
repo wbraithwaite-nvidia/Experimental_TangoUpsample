@@ -59,8 +59,9 @@ public class TangoUpsampleActivity
 		view_.setEGLContextFactory(new TangoUpsampleRenderer.ContextFactory(3.0));
         renderer_ = new TangoUpsampleRenderer();
         renderer_.activity = TangoUpsampleActivity.this;
-        renderer_.isAutoRecovery = true;
-		renderer_.useDepth = true;
+        renderer_.useAutoRecovery = true;
+		renderer_.useDepthCamera = true;
+		renderer_.useColorCamera = true;
         view_.setRenderer(renderer_);
 
         tangoPoseStatusText_ = (TextView)findViewById(R.id.debug_info);
@@ -81,34 +82,8 @@ public class TangoUpsampleActivity
         findViewById(R.id.first_color).setOnClickListener(this);
         findViewById(R.id.first_fisheye).setOnClickListener(this);
         findViewById(R.id.first_pointcloud).setOnClickListener(this);
-		/*
-        new Thread(new Runnable() 
-		{
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(10);	// every 10ms
-
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                boolean isLocalized = TangoUpsampleNative.getIsLocalized();
-                                if(isLocalized) {
-                                    findViewById(R.id.reset).setVisibility(View.GONE);
-                                } else {
-                                    findViewById(R.id.reset).setVisibility(View.VISIBLE);
-                                }
-                                tangoPoseStatusText_.setText(TangoUpsampleNative.getPoseString());
-                            }
-                        });
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-		*/
+		
+		startUIThread();
     }
 
 	//----------------------------------------------------------------------------------------
@@ -140,16 +115,16 @@ public class TangoUpsampleActivity
     protected void onPause() 
 	{
         super.onPause();
-
+		
 		view_.queueEvent(new Runnable() {
 			@Override public void run() {
 				renderer_.notifyPausing(); // notify renderer of pause for resource cleanup.
 			}
 		});
-
+		
         view_.onPause(); // GLSurfaceView clients must pass this along.
 
-		//TangoUpsampleNative.disconnectService();
+		TangoUpsampleNative.disconnectService();
     }
 
 	//----------------------------------------------------------------------------------------
@@ -171,6 +146,35 @@ public class TangoUpsampleActivity
             }
         }
     }
+
+	//----------------------------------------------------------------------------------------
+	private void startUIThread() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(10);	// every 10ms
+
+						runOnUiThread(new Runnable() {
+							public void run() {
+								boolean isLocalized = TangoUpsampleNative.getIsLocalized();
+								if(isLocalized) {
+									findViewById(R.id.reset).setVisibility(View.GONE);
+								} else {
+									findViewById(R.id.reset).setVisibility(View.VISIBLE);
+								}
+								tangoPoseStatusText_.setText(TangoUpsampleNative.getPoseString());
+							}
+						});
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}).start();
+	}
 
 	//----------------------------------------------------------------------------------------
     @Override

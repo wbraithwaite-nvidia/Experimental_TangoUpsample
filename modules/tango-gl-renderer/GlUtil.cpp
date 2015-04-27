@@ -29,25 +29,28 @@ glm::mat4(1.0f, 0.0f, 0.0f, 0.0f, 0, cos(13 * 3.14f / 180.0f),
 sin(13 * 3.14f / 180.0f), 0, 0, -sin(13 * 3.14f / 180.0f),
 cos(13 * 3.14f / 180.0f), 0, 0.0f, 0.0f, 0.0f, 1.0f);
 
-void GlUtil::CheckGlError(const char* operation) {
+void GlUtil::CheckGlError(const char* operation,const char* file,int line) {
 	for (GLint error = glGetError(); error; error = glGetError()) {
-		LOGI("after %s() glError (0x%x)\n", operation, error);
+		if (file)
+			LOGI("after %s() glError (0x%x) %s:%d\n", operation, error, file, line);
+		else 
+			LOGI("after %s() glError (0x%x)\n", operation, error);
 	}
 }
 
-GlTextureImpl::GlTextureImpl() : id(0), width(0), height(0), internalType(0)
+GlTexture::GlTexture() : id(0), width(0), height(0), internalType(0)
 {
 }
 
-GlTextureImpl::~GlTextureImpl()
+GlTexture::~GlTexture()
 {
 	if (id)
 		glDeleteTextures(1, &id);
 }
 
-GlTexture GlTexture::create(GLenum t, int w, int h, GLenum i, int numMipmaps)
+GlTexturePtr GlTexturePtr::create(GLenum t, int w, int h, GLenum i, int numMipmaps)
 {
-	GlTexture r(Ptr(new GlTextureImpl()));
+	GlTexturePtr r(Ptr(new GlTexture()));
 
 	if (w <= 0)
 		w = 1;
@@ -68,37 +71,37 @@ GlTexture GlTexture::create(GLenum t, int w, int h, GLenum i, int numMipmaps)
 	return r;
 }
 
-GlFramebufferImpl::GlFramebufferImpl() : id(0)
+GlFramebuffer::GlFramebuffer() : id(0)
 {
 }
 
-GlFramebufferImpl::~GlFramebufferImpl()
+GlFramebuffer::~GlFramebuffer()
 {
 	if (id)
 		glDeleteFramebuffers(1, &id);
 }
 
-GlFramebuffer GlFramebuffer::create()
+GlFramebufferPtr GlFramebufferPtr::create()
 {
-	GlFramebuffer r(Ptr(new GlFramebufferImpl));
+	GlFramebufferPtr r(Ptr(new GlFramebuffer));
 	glGenFramebuffers(1, &r->id);
 	return r;
 }
 
 
-GlTransformFeedbackImpl::GlTransformFeedbackImpl() : id(0)
+GlTransformFeedback::GlTransformFeedback() : id(0)
 {
 }
 
-GlTransformFeedbackImpl::~GlTransformFeedbackImpl()
+GlTransformFeedback::~GlTransformFeedback()
 {
 	if (id)
 		glDeleteTransformFeedbacks(1, &id);
 }
 
-GlTransformFeedback GlTransformFeedback::create()
+GlTransformFeedbackPtr GlTransformFeedbackPtr::create()
 {
-	GlTransformFeedback r(Ptr(new GlTransformFeedbackImpl));
+	GlTransformFeedbackPtr r(Ptr(new GlTransformFeedback));
 	glGenTransformFeedbacks(1, &r->id);
 	return r;
 }

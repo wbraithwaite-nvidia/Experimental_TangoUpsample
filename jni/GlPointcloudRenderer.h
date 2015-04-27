@@ -19,12 +19,12 @@ public:
 	
 	void fillHoles(GLuint destTextureId, int destWidth, int destHeight, GLuint srcDepthTextureId);	
 
-	void storeDepthInAlpha(const GlTexture& dstRGBDTexture, const GlTexture& srcColorTexture, const GlTexture& srcDepthTexture);
+	void storeDepthInAlpha(const GlTexturePtr& dstRGBDTexture, const GlTexturePtr& srcColorTexture, const GlTexturePtr& srcDepthTexture);
 
 	// build a pyramid of minimum depths.
 	// the result is as though we rendered the points at progressively lower resolutions.
-	void buildRgbdPyramid(const GlTexture& srcColorTexture, const GlTexture& srcDepthTexture, int numLevels);
-	void buildColorPyramid(const GlTexture& srcColorTexture, int numLevels);
+	void buildRgbdPyramid(const GlTexturePtr& srcColorTexture, const GlTexturePtr& srcDepthTexture, int numLevels);
+	void buildColorPyramid(const GlTexturePtr& srcColorTexture, int numLevels);
 
 	// create an RGB texture (from one view) using a DEPTH texture from another view.
 	void projectColor(GLuint destTextureId, int destWidth, int destHeight,
@@ -43,17 +43,17 @@ public:
 		const glm::mat4& depthViewToWorldMat, const glm::mat4& depthViewProjMat, GLuint srcColorTextureId, GLuint srcDepthTextureId,
 		float nearClip, float farClip);
 
-	void fillHoles(const GlTexture& destRgbdTexture, const GlTexture& srcRgbdTexture);
+	void fillHoles(const GlTexturePtr& destRgbdTexture, const GlTexturePtr& srcRgbdTexture);
 
 public:
 
 	GlQuad* quad_;
-	GlTexture cleanDepthTexture_;
-	GlTexture rgbdTexture_;
-	GlTexture* depthTexturePyramid_;
-	GlTexture* colorTexturePyramid_;
-	GlTexture* depthUpsampleTexture_;
-	GlFramebuffer fbo_;
+	GlTexturePtr cleanDepthTexture_;
+	GlTexturePtr rgbdTexture_;
+	GlTexturePtr* depthTexturePyramid_;
+	GlTexturePtr* colorTexturePyramid_;
+	GlTexturePtr* depthUpsampleTexture_;
+	GlFramebufferPtr fbo_;
 	
 	GlMaterial setRgbdMaterial_;
 	GlMaterial setColorMaterial_;

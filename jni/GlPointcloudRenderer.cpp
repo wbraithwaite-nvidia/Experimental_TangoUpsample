@@ -191,30 +191,30 @@ GlPointcloudRenderer::GlPointcloudRenderer(int width, int height, int numLevels)
 	mergeRgbdMaterial_ = new GlMaterial(vs_simpleTexture, fs_projectColorFromDepth);
 
 
-	colorTexturePyramid_ = new GlTexture[numLevels_];
-	depthTexturePyramid_ = new GlTexture[numLevels_];
-	depthUpsampleTexture_ = new GlTexture[numLevels_];
+	colorTexturePyramid_ = new GlTexturePtr[numLevels_];
+	depthTexturePyramid_ = new GlTexturePtr[numLevels_];
+	depthUpsampleTexture_ = new GlTexturePtr[numLevels_];
 
 	for (int l = 0; l < numLevels_; ++l)
 	{		
-		depthTexturePyramid_[l] = GlTexture::create(GL_TEXTURE_2D, width_ >> l, height_ >> l, GL_RGBA32F);	
+		depthTexturePyramid_[l] = GlTexturePtr::create(GL_TEXTURE_2D, width_ >> l, height_ >> l, GL_RGBA32F);	
 		//glBindTexture(GL_TEXTURE_2D, depthTexturePyramid_[l]->id);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		depthUpsampleTexture_[l] = GlTexture::create(GL_TEXTURE_2D, width_ >> l, height_ >> l, GL_RGBA32F);
+		depthUpsampleTexture_[l] = GlTexturePtr::create(GL_TEXTURE_2D, width_ >> l, height_ >> l, GL_RGBA32F);
 		//glBindTexture(GL_TEXTURE_2D, depthUpsampleTexture_[l]->id);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		colorTexturePyramid_[l] = GlTexture::create(GL_TEXTURE_2D, width_ >> l, height_ >> l, GL_RGBA32F);
+		colorTexturePyramid_[l] = GlTexturePtr::create(GL_TEXTURE_2D, width_ >> l, height_ >> l, GL_RGBA32F);
 		//glBindTexture(GL_TEXTURE_2D, colorTexturePyramid_[l]->id);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	fbo_ = GlFramebuffer::create();
+	fbo_ = GlFramebufferPtr::create();
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo_->id);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, depthTexturePyramid_[0]->id, 0);
 
@@ -234,7 +234,7 @@ GlPointcloudRenderer::GlPointcloudRenderer(int width, int height, int numLevels)
 
 	quad_ = new GlQuad();
 
-	rgbdTexture_ = GlTexture::create(GL_TEXTURE_2D, width_, height_, GL_RGBA32F);
+	rgbdTexture_ = GlTexturePtr::create(GL_TEXTURE_2D, width_, height_, GL_RGBA32F);
 
 	GlUtil::CheckGlError("GlPointcloudRenderer()");
 }
@@ -274,7 +274,7 @@ void GlPointcloudRenderer::renderToTexture(GlPointcloud* pointcloud, float point
 	glUseProgram(0);
 }
 
-void GlPointcloudRenderer::buildRgbdPyramid(const GlTexture& srcColorTexture, const GlTexture& srcDepthTexture, int numLevels)
+void GlPointcloudRenderer::buildRgbdPyramid(const GlTexturePtr& srcColorTexture, const GlTexturePtr& srcDepthTexture, int numLevels)
 {
 	if (numLevels > numLevels_)
 		numLevels = numLevels_;
@@ -311,7 +311,7 @@ void GlPointcloudRenderer::buildRgbdPyramid(const GlTexture& srcColorTexture, co
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void GlPointcloudRenderer::buildColorPyramid(const GlTexture& srcColorTexture, int numLevels)
+void GlPointcloudRenderer::buildColorPyramid(const GlTexturePtr& srcColorTexture, int numLevels)
 {
 	if (numLevels > numLevels_)
 		numLevels = numLevels_;
@@ -619,7 +619,7 @@ void GlPointcloudRenderer::warpImage(GlPlaneMesh* mesh, const glm::mat4& dstWorl
 #endif
 }
 
-void GlPointcloudRenderer::storeDepthInAlpha(const GlTexture& dstRGBDTexture, const GlTexture& srcColorTexture, const GlTexture& srcDepthTexture)
+void GlPointcloudRenderer::storeDepthInAlpha(const GlTexturePtr& dstRGBDTexture, const GlTexturePtr& srcColorTexture, const GlTexturePtr& srcDepthTexture)
 {
 	// now put the depthTexture into the RGBD image...
 	glViewport(0, 0, dstRGBDTexture->width, dstRGBDTexture->height);
@@ -650,7 +650,7 @@ void GlPointcloudRenderer::storeDepthInAlpha(const GlTexture& dstRGBDTexture, co
 	glEnable(GL_DEPTH_TEST);
 }
 
-void GlPointcloudRenderer::fillHoles(const GlTexture& destRgbdTexture, const GlTexture& srcRgbdTexture)
+void GlPointcloudRenderer::fillHoles(const GlTexturePtr& destRgbdTexture, const GlTexturePtr& srcRgbdTexture)
 {
 	glViewport(0, 0, destRgbdTexture->width, destRgbdTexture->height);
 

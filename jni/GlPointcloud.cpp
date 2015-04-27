@@ -30,7 +30,18 @@ static const char kFragmentShader[] =
 STRINGIFY(
 in vec3 fColor;
 void main() {
-	gl_FragColor = vec4(fColor.rgb, 1.0);//gl_FragCoord.z);
+	gl_FragColor = vec4(fColor.rgb, gl_FragCoord.z);
+});
+
+static const char* fs_colorFromTexture =
+"#version 300 es \n"
+"precision highp float;\n"
+"precision highp int;\n"
+STRINGIFY(
+uniform vec2 resolution;
+uniform sampler2D texture0;
+void main() {
+	gl_FragColor = vec4(texture2D(texture0, vec2(gl_FragCoord.xy/resolution.xy)).rgb, gl_FragCoord.z);
 });
 
 
@@ -81,13 +92,14 @@ static const glm::mat4 inverse_z_mat = glm::mat4(1.0f, 0.0f, 0.0f, 0.0f,
 GlPointcloud::GlPointcloud()
 	:
 	defaultMaterial(kVertexShader, kFragmentShader),
+	setRgbdMaterial(kVertexShader, fs_colorFromTexture),
 	tfMaterial_(vs_colorFromTexture, kFragmentShader)
 {
 
 	numPoints_ = 0;
 	glGenBuffers(2, vbos_);
 
-	tf_ = GlTransformFeedback::create();
+	tf_ = GlTransformFeedbackPtr::create();
 	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, tf_->id);
     const char* varyingNames[] = {"fColor"};
     glTransformFeedbackVaryings(tfMaterial_.shader_program_, 1, varyingNames, GL_SEPARATE_ATTRIBS);
@@ -132,6 +144,7 @@ void GlPointcloud::updateColorsFromTexture(GLuint colorTextureId, const glm::mat
 	GLuint colorViewProjMatLoc = glGetUniformLocation(tfMaterial_.shader_program_, "colorViewProjMat");
 	glUniformMatrix4fv(depthViewToWorldMatLoc, 1, GL_FALSE, glm::value_ptr(viewToWorldMat_ * inverse_z_mat));
 	glUniformMatrix4fv(colorWorldToViewMatLoc, 1, GL_FALSE, glm::value_ptr(glm::inverse(colorViewToWorldMat)));
+	//glUniformMatrix4fv(colorWorldToViewMatLoc, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0)));
 	glUniformMatrix4fv(colorViewProjMatLoc, 1, GL_FALSE, glm::value_ptr(colorViewProjMat));
 
 	glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, tf_->id);
@@ -158,7 +171,7 @@ void GlPointcloud::updateColorsFromTexture(GLuint colorTextureId, const glm::mat
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void GlPointcloud::render(glm::mat4 viewProjectionMat, glm::mat4 worldToViewMat, const GlMaterial& mat, float pointSize)
+void GlPointcloud::render(glm::mat4 viewProjectionMat, glm::mat4 worldToViewMat, const GlMaterial& mat, float pointSize, float width, float height)
 {
 	if (numPoints_ == 0)
 		return;
@@ -169,6 +182,10 @@ void GlPointcloud::render(glm::mat4 viewProjectionMat, glm::mat4 worldToViewMat,
 	GLuint pointSizeLoc = glGetUniformLocation(mat.shader_program_, "pointSize");
 	if (pointSizeLoc != -1)
 		glUniform1f(pointSizeLoc, pointSize);
+
+	GLuint resolutionLoc = glGetUniformLocation(mat.shader_program_, "resolution");
+	if (resolutionLoc != -1)
+		glUniform2f(resolutionLoc, width, height);
 
 	if (mat.attrib_vertices_ != -1)
 	{
@@ -182,7 +199,7 @@ void GlPointcloud::render(glm::mat4 viewProjectionMat, glm::mat4 worldToViewMat,
 		glEnableVertexAttribArray(mat.attrib_colors_);
 		glVertexAttribPointer(mat.attrib_colors_, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	}
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
 
 	glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
@@ -192,6 +209,9 @@ void GlPointcloud::render(glm::mat4 viewProjectionMat, glm::mat4 worldToViewMat,
 		glDisableVertexAttribArray(mat.attrib_vertices_);
 	if (mat.attrib_colors_ != -1)
 		glDisableVertexAttribArray(mat.attrib_colors_);
-	glGetError();
+	//glGetError();
+
 	glUseProgram(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 }
