@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OddTangoUpsample", "OddTangoUpsample.vcxproj", "{FBAD6B95-514E-4BB0-AF97-952B005D87A0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		debug|Tegra-Android = debug|Tegra-Android
+		profile|Tegra-Android = profile|Tegra-Android
+		release|Tegra-Android = release|Tegra-Android
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBAD6B95-514E-4BB0-AF97-952B005D87A0}.debug|Tegra-Android.ActiveCfg = debug|Tegra-Android
+		{FBAD6B95-514E-4BB0-AF97-952B005D87A0}.debug|Tegra-Android.Build.0 = debug|Tegra-Android
+		{FBAD6B95-514E-4BB0-AF97-952B005D87A0}.profile|Tegra-Android.ActiveCfg = profile|Tegra-Android
+		{FBAD6B95-514E-4BB0-AF97-952B005D87A0}.profile|Tegra-Android.Build.0 = profile|Tegra-Android
+		{FBAD6B95-514E-4BB0-AF97-952B005D87A0}.release|Tegra-Android.ActiveCfg = release|Tegra-Android
+		{FBAD6B95-514E-4BB0-AF97-952B005D87A0}.release|Tegra-Android.Build.0 = release|Tegra-Android
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

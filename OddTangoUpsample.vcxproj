@@ -51,17 +51,16 @@
     <ClCompile Include="jni\GlDepthUpsampler.cpp" />
     <ClCompile Include="jni\GlPlaneMesh.cpp" />
     <ClCompile Include="jni\GlPointcloud.cpp" />
-    <ClCompile Include="jni\GlPointcloudRenderer.cpp" />
     <ClCompile Include="jni\GlQuad.cpp" />
     <ClCompile Include="jni\GlVideoOverlay.cpp" />
-    <ClCompile Include="modules/tango-gl-renderer/GlMaterial.cpp" />
-    <ClCompile Include="modules/tango-gl-renderer/MaterialShaders.cpp" />
+    <ClCompile Include="jni\GlMaterial.cpp" />
+    <ClCompile Include="jni\MaterialShaders.cpp" />
     <ClCompile Include="modules/tango-gl-renderer/ar_ruler.cpp" />
     <ClCompile Include="modules/tango-gl-renderer/axis.cpp" />
     <ClCompile Include="modules/tango-gl-renderer/cube.cpp" />
     <ClCompile Include="modules/tango-gl-renderer/camera.cpp" />
     <ClCompile Include="modules/tango-gl-renderer/frustum.cpp" />
-    <ClCompile Include="modules/tango-gl-renderer/GlUtil.cpp" />
+    <ClCompile Include="modules\tango-gl-renderer\gl_util.cpp" />
     <ClCompile Include="modules/tango-gl-renderer/grid.cpp" />
     <ClCompile Include="modules/tango-gl-renderer/trace.cpp" />
     <ClCompile Include="modules/tango-gl-renderer/transform.cpp" />
@@ -79,15 +78,14 @@
     <ClInclude Include="jni\GlBilateralGrid.h" />
     <ClInclude Include="jni\GlDepthUpsampler.h" />
     <ClInclude Include="jni\GlPlaneMesh.h" />
-    <ClInclude Include="jni\GlPointcloudRenderer.h" />
     <ClInclude Include="jni\TangoRenderer.h" />
     <ClInclude Include="jni\GlPointcloud.h" />
     <ClInclude Include="jni\GlQuad.h" />
     <ClInclude Include="jni\Tango.h" />
     <ClInclude Include="jni\GlVideoOverlay.h" />
     <ClInclude Include="jni\TangoUpsampleUtil.h" />
-    <ClInclude Include="modules\tango-gl-renderer\GlMaterial.h" />
-    <ClInclude Include="modules\tango-gl-renderer\MaterialShaders.h" />
+    <ClInclude Include="jni\GlMaterial.h" />
+    <ClInclude Include="jni\MaterialShaders.h" />
     <ClInclude Include="modules\tango-gl-renderer\ar_ruler.h" />
     <ClInclude Include="modules\tango-gl-renderer\axis.h" />
     <ClInclude Include="modules\tango-gl-renderer\band.h" />
@@ -96,7 +94,7 @@
     <ClInclude Include="modules\tango-gl-renderer\cube.h" />
     <ClInclude Include="modules\tango-gl-renderer\drawable_object.h" />
     <ClInclude Include="modules\tango-gl-renderer\frustum.h" />
-    <ClInclude Include="modules\tango-gl-renderer\GlUtil.h" />
+    <ClInclude Include="modules\tango-gl-renderer\gl_util.h" />
     <ClInclude Include="modules\tango-gl-renderer\grid.h" />
     <ClInclude Include="modules\tango-gl-renderer\polygon.h" />
     <ClInclude Include="modules\tango-gl-renderer\trace.h" />
@@ -146,7 +144,7 @@
       </CppLanguageStandard>
     </ClCompile>
     <Link>
-      <AndroidSystemLibs>c;m;log;gcc;android;EGL;GLESv3;z</AndroidSystemLibs>
+      <AndroidSystemLibs>c;m;log;gcc;android;EGL;GLESv3</AndroidSystemLibs>
       <AdditionalLibraryDirectories>third/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>tango_client_api</AdditionalDependencies>
       <ReportUndefinedSymbols>false</ReportUndefinedSymbols>
@@ -169,6 +167,7 @@
     <Link>
       <AndroidSystemLibs>c;m;log;gcc;android;EGL;GLESv3</AndroidSystemLibs>
       <ReportUndefinedSymbols>false</ReportUndefinedSymbols>
+      <AdditionalDependencies>tango_client_api</AdditionalDependencies>
     </Link>
     <AntBuild>
       <AntBuildPath>$(ProjectDir)\__build\$(ProjectName)\$(PlatConf)</AntBuildPath>

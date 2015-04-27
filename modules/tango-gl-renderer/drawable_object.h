@@ -17,7 +17,7 @@
 #ifndef TANGO_GL_RENDERER_DRAWABLE_OBJECT_H
 #define TANGO_GL_RENDERER_DRAWABLE_OBJECT_H
 
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 #include "tango-gl-renderer/transform.h"
 #include "GlMaterial.h"
 

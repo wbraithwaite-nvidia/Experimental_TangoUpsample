@@ -3,8 +3,8 @@
 #define GL_QUAD_H_
 
 #include "tango-gl-renderer/drawable_object.h"
-#include "tango-gl-renderer/GlUtil.h"
-#include "tango-gl-renderer/GlMaterial.h"
+#include "tango-gl-renderer/gl_util.h"
+#include "GlMaterial.h"
 
 class GlQuad : public DrawableObject
 {

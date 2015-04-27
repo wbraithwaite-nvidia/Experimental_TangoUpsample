@@ -17,7 +17,7 @@
 #ifndef TANGO_GL_RENDERER_TRANSFORM_H
 #define TANGO_GL_RENDERER_TRANSFORM_H
 
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 
 class Transform {
  public:

@@ -2,8 +2,8 @@
 #ifndef GLPOINTCLOUD_H_
 #define GLPOINTCLOUD_H_
 
-#include "tango-gl-renderer/GlUtil.h"
-#include "tango-gl-renderer/GlMaterial.h"
+#include "tango-gl-renderer/gl_util.h"
+#include "GlMaterial.h"
 
 // depth_buffer_size: Number of vertices in of the data. Example: 60 floats
 // in the buffer, the size should be 60/3 = 20;

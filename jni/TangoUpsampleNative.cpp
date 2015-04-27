@@ -12,12 +12,11 @@
 #include "tango-gl-renderer/camera.h"
 #include "tango-gl-renderer/cube.h"
 #include "tango-gl-renderer/frustum.h"
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 #include "tango-gl-renderer/grid.h"
 #include "tango-gl-renderer/trace.h"
-#include "tango-gl-renderer/GlMaterial.h"
+#include "GlMaterial.h"
 #include "GlBilateralGrid.h"
-#include "GlPointcloudRenderer.h"
 #include "GlDepthUpsampler.h"
 
 #include "Tango.h"
@@ -57,7 +56,6 @@ Grid* ar_grid = 0;
 Cube *cube = 0;
 
 GlDepthUpsampler* depthUpsampler = 0;
-GlPointcloudRenderer* pointCloudRenderer = 0;
 
 // Single finger touch positional values.
 // First element in the array is x-axis touching position.
@@ -181,8 +179,6 @@ bool setupGlResources()
 	depthData = new DepthViewData();
 
 	depthUpsampler = new GlDepthUpsampler();
-
-	pointCloudRenderer = new GlPointcloudRenderer(POINTCLOUD_RESX, POINTCLOUD_RESY, NUM_LEVELS);
 
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_BLEND);
@@ -794,9 +790,6 @@ extern "C" {
 
 		delete cube;
 		cube = 0;
-
-		delete pointCloudRenderer;
-		pointCloudRenderer = 0;
 
 		delete depthUpsampler;
 		depthUpsampler = 0;

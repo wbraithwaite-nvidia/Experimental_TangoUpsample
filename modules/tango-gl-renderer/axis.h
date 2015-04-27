@@ -19,7 +19,7 @@
 
 #include "tango-gl-renderer/drawable_object.h"
 #include "tango-gl-renderer/transform.h"
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 
 class Axis : public Transform {
   Axis(const Axis& other);

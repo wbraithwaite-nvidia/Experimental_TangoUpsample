@@ -18,6 +18,10 @@
 #include "TangoUpsampleUtil.h"
 #include <vector>
 
+//#define USE_COLOR_MANUAL_EXPOSURE
+//#define USE_POSE_SMOOTHING
+//#define USE_LOW_LATENCY_IMU
+
 //------------------------------------------------------------------------------
 // Get status string based on the pose status code.
 static const char* getStatusStringFromStatusCode(TangoPoseStatusType status)
@@ -142,32 +146,32 @@ bool TangoData::setConfig(bool useAutoRecovery, bool useColorCamera, bool useDep
 
 	fisheye.isActive = true;
 	view.isActive = true;
-
-
-	if (TangoConfig_setBool(config_, "config_enable_low_latency_imu_integration", false) != TANGO_SUCCESS)
+	
+#ifdef USE_LOW_LATENCY_IMU
+	if (TangoConfig_setBool(config_, "config_enable_low_latency_imu_integration", true) != TANGO_SUCCESS)
 	{
 		LOGE("config_enable_low_latency_imu_integration(): Failed");
 		return false;
 	}
-
+#endif
 	if (TangoConfig_setBool(config_, "config_enable_auto_recovery", useAutoRecovery) != TANGO_SUCCESS)
 	{
 		LOGE("config_enable_auto_recovery(): Failed");
 		return false;
 	}
-
-	if (TangoConfig_setBool(config_, "config_high_rate_pose", true) != TANGO_SUCCESS)
+#ifndef USE_POSE_SMOOTHING	
+	if (TangoConfig_setBool(config_, "config_high_rate_pose", false) != TANGO_SUCCESS)
 	{
 		LOGE("config_high_rate_pose Failed");
 		return false;
 	}
 
-	if (TangoConfig_setBool(config_, "config_smooth_pose", true) != TANGO_SUCCESS)
+	if (TangoConfig_setBool(config_, "config_smooth_pose", false) != TANGO_SUCCESS)
 	{
 		LOGE("config_smooth_pose Failed");
 		return false;
 	}
-
+#endif
 	if (TangoConfig_setBool(config_, "config_enable_color_camera", useColorCamera) != TANGO_SUCCESS)
 	{
 		LOGE("config_enable_color_camera Failed");
@@ -176,12 +180,13 @@ bool TangoData::setConfig(bool useAutoRecovery, bool useColorCamera, bool useDep
 
 	if (useColorCamera)
 	{
+#ifdef USE_COLOR_MANUAL_EXPOSURE
 		if (TangoConfig_setBool(config_, "config_color_mode_auto", false) != TANGO_SUCCESS)
 		{
 			LOGE("config_color_mode_auto Failed");
 			return false;
 		}
-
+		
 		if (TangoConfig_setInt32(config_, "config_color_iso", 800) != TANGO_SUCCESS)
 		{
 			LOGE("config_color_iso Failed");
@@ -193,6 +198,7 @@ bool TangoData::setConfig(bool useAutoRecovery, bool useColorCamera, bool useDep
 			LOGE("config_color_exp Failed");
 			return false;
 		}
+#endif		
 	}
 
 	if (TangoConfig_setBool(config_, "config_enable_depth", useDepthCamera) != TANGO_SUCCESS)

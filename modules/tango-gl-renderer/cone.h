@@ -22,7 +22,7 @@
 #include <math.h>
 
 #include "tango-gl-renderer/drawable_object.h"
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 
 class Cone : public DrawableObject {
  public:

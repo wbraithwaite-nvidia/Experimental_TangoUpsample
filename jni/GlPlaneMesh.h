@@ -3,8 +3,8 @@
 #define GL_PLANEMESH_H_
 
 #include "tango-gl-renderer/drawable_object.h"
-#include "tango-gl-renderer/GlUtil.h"
-#include "tango-gl-renderer/GlMaterial.h"
+#include "tango-gl-renderer/gl_util.h"
+#include "GlMaterial.h"
 
 class GlPlaneMesh : public DrawableObject
 {

@@ -72,6 +72,9 @@
     <None Include="res\values\dimens.xml" />
     <None Include="res\values\dimens.xml" />
     <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
+    <None Include="res\values\dimens.xml" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="modules/tango-gl-renderer/ar_ruler.cpp">
@@ -98,12 +101,6 @@
     <ClCompile Include="modules/tango-gl-renderer/transform.cpp">
       <Filter>jni</Filter>
     </ClCompile>
-    <ClCompile Include="modules/tango-gl-renderer/MaterialShaders.cpp">
-      <Filter>jni</Filter>
-    </ClCompile>
-    <ClCompile Include="modules/tango-gl-renderer/GlMaterial.cpp">
-      <Filter>jni</Filter>
-    </ClCompile>
     <ClCompile Include="jni\GlBilateralGrid.cpp">
       <Filter>jni</Filter>
     </ClCompile>
@@ -119,19 +116,22 @@
     <ClCompile Include="jni\GlVideoOverlay.cpp">
       <Filter>jni</Filter>
     </ClCompile>
-    <ClCompile Include="modules/tango-gl-renderer/GlUtil.cpp">
-      <Filter>jni</Filter>
-    </ClCompile>
     <ClCompile Include="jni\GlQuad.cpp">
       <Filter>jni</Filter>
     </ClCompile>
     <ClCompile Include="jni\GlPlaneMesh.cpp">
       <Filter>jni</Filter>
     </ClCompile>
-    <ClCompile Include="jni\GlPointcloudRenderer.cpp">
+    <ClCompile Include="jni\GlDepthUpsampler.cpp">
       <Filter>jni</Filter>
     </ClCompile>
-    <ClCompile Include="jni\GlDepthUpsampler.cpp">
+    <ClCompile Include="modules\tango-gl-renderer\gl_util.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\GlMaterial.cpp">
+      <Filter>jni</Filter>
+    </ClCompile>
+    <ClCompile Include="jni\MaterialShaders.cpp">
       <Filter>jni</Filter>
     </ClCompile>
   </ItemGroup>
@@ -154,9 +154,6 @@
     <AndroidBuild Include="build.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="modules\tango-gl-renderer\MaterialShaders.h">
-      <Filter>jni</Filter>
-    </ClInclude>
     <ClInclude Include="modules\tango-gl-renderer\frustum.h">
       <Filter>jni</Filter>
     </ClInclude>
@@ -193,12 +190,6 @@
     <ClInclude Include="modules\tango-gl-renderer\transform.h">
       <Filter>jni</Filter>
     </ClInclude>
-    <ClInclude Include="modules\tango-gl-renderer\GlMaterial.h">
-      <Filter>jni</Filter>
-    </ClInclude>
-    <ClInclude Include="modules\tango-gl-renderer\GlUtil.h">
-      <Filter>jni</Filter>
-    </ClInclude>
     <ClInclude Include="jni\TangoRenderer.h">
       <Filter>jni</Filter>
     </ClInclude>
@@ -223,10 +214,16 @@
     <ClInclude Include="jni\TangoUpsampleUtil.h">
       <Filter>jni</Filter>
     </ClInclude>
-    <ClInclude Include="jni\GlPointcloudRenderer.h">
+    <ClInclude Include="jni\GlDepthUpsampler.h">
       <Filter>jni</Filter>
     </ClInclude>
-    <ClInclude Include="jni\GlDepthUpsampler.h">
+    <ClInclude Include="modules\tango-gl-renderer\gl_util.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\GlMaterial.h">
+      <Filter>jni</Filter>
+    </ClInclude>
+    <ClInclude Include="jni\MaterialShaders.h">
       <Filter>jni</Filter>
     </ClInclude>
   </ItemGroup>

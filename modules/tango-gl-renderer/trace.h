@@ -21,7 +21,7 @@
 #include <vector>
 
 #include "tango-gl-renderer/drawable_object.h"
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 
 class Trace : public DrawableObject {
   Trace(const Trace& other);

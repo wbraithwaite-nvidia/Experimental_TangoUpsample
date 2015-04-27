@@ -2,8 +2,8 @@
 #ifndef GLMATERIAL_H_
 #define GLMATERIAL_H_
 
-#include "tango-gl-renderer/GlUtil.h"
-#include "tango-gl-renderer/MaterialShaders.h"
+#include "tango-gl-renderer/gl_util.h"
+#include "MaterialShaders.h"
 
 class GlMaterial
 {

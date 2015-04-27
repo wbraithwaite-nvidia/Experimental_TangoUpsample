@@ -18,7 +18,7 @@
 #define TANGO_GL_RENDERER_CUBE_H
 
 #include "tango-gl-renderer/drawable_object.h"
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 
 class Cube : public DrawableObject {
   Cube(const Cube& other);

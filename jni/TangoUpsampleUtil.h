@@ -6,7 +6,6 @@
 #include <sstream>
 #include <stdlib.h>
 #include <string>
-//#include "oddcore/OddLog.h"
 #include "oddcore/OddTypes.h"
 
 #define SharedPtr odd::SharedPtr

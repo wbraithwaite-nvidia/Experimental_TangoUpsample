@@ -2,7 +2,7 @@
 #ifndef GLBILATERALGRID_H
 #define GLBILATERALGRID_H
 
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 #include "GlQuad.h"
 #include "GlPlaneMesh.h"
 #include "GlPointcloud.h"

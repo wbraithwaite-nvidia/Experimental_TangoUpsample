@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string>
 #include <tango_client_api.h>
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 
 const int kMeterToMillimeter = 1000;
 const int kVersionStringLength = 27;

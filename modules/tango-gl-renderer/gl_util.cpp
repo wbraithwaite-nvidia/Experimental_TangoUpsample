@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 
 const glm::mat4 GlUtil::ss_to_ow_mat =
 glm::mat4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,

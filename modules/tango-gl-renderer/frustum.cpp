@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 #include "tango-gl-renderer/frustum.h"
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 
 static const char kVertexShader[] =
 	"#version 300 es \n"

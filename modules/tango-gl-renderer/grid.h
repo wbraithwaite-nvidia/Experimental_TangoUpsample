@@ -18,7 +18,7 @@
 #define TANGO_GL_RENDERER_GRID_H
 
 #include "tango-gl-renderer/drawable_object.h"
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 
 class Grid : public DrawableObject {
   Grid(const Grid& other);

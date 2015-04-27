@@ -18,7 +18,7 @@
 #define TANGO_GL_RENDERER_AR_RULER_H
 
 #include "tango-gl-renderer/drawable_object.h"
-#include "tango-gl-renderer/GlUtil.h"
+#include "tango-gl-renderer/gl_util.h"
 
 class ArRuler : public DrawableObject {
  public:
