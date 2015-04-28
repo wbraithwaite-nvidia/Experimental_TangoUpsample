@@ -212,6 +212,14 @@ bool render(int portWidth, int portHeight)
 	ensureViewData();
 	updateViewData();
 
+	// ensure the depthupsampler is the right format.
+	depthUpsampler->setup(POINTCLOUD_RESX, POINTCLOUD_RESY, NUM_LEVELS);
+
+	if (colorData)
+	{
+		depthUpsampler->updateColorPyramid(colorData->texture);
+	}
+
 	if (pointCloudData && colorData)
 	{
 		if (pointCloudData->lastUpdateId != tango.pointcloud.updateId)
@@ -223,34 +231,20 @@ bool render(int portWidth, int portHeight)
 			// this is sparse, only storing a single color value for each point.
 
 			pointCloudData->pointclouds->updateColorsFromTexture(
-				colorData->texture->id, colorData->viewProjectionMat, colorData->viewToWorldMat);
-		}
-	}
-
-	if (depthUpsampler)
-	{
-		// ensure the depthupsampler is the right format.
-		depthUpsampler->setup(POINTCLOUD_RESX, POINTCLOUD_RESY, NUM_LEVELS);
-
-		if (colorData)
-		{
-			depthUpsampler->updateColorPyramid(colorData->texture);
+				depthUpsampler->colorTexturePyramid_[2]->id, colorData->viewProjectionMat, colorData->viewToWorldMat);
 		}
 
-		if (pointCloudData)
-		{
-			// BUG: this fails with imuData (probably because of a bad projection matrix!)
-			depthData->viewProjectionMat = colorData->viewProjectionMat;
-			depthData->viewToWorldMat = imuData->viewToWorldMat;
+		// BUG: this fails with imuData (probably because of a bad projection matrix!)
+		depthData->viewProjectionMat = colorData->viewProjectionMat;
+		depthData->viewToWorldMat = colorData->viewToWorldMat;
 
-			depthUpsampler->renderPointcloudToTexture(
-				pointCloudData->pointclouds, 
-				depthData->viewProjectionMat, glm::inverse(depthData->viewToWorldMat), pointCloudData->pointclouds->defaultMaterial);
+		depthUpsampler->renderPointcloudToTexture(
+			pointCloudData->pointclouds, 
+			depthData->viewProjectionMat, glm::inverse(depthData->viewToWorldMat), pointCloudData->pointclouds->defaultMaterial);
 
-			depthUpsampler->updateRgbdPyramid(depthUpsampler->pointcloudColorTexture_, depthUpsampler->pointcloudDepthTexture_);
+		depthUpsampler->updateRgbdPyramid(depthUpsampler->pointcloudColorTexture_, depthUpsampler->pointcloudDepthTexture_);
 
-			depthUpsampler->upsampleRgbd();
-		}
+		depthUpsampler->upsampleRgbd();
 	}
 
 	/*

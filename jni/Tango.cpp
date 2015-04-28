@@ -18,7 +18,7 @@
 #include "TangoUpsampleUtil.h"
 #include <vector>
 
-//#define USE_COLOR_MANUAL_EXPOSURE
+#define USE_COLOR_MANUAL_EXPOSURE
 //#define USE_POSE_SMOOTHING
 //#define USE_LOW_LATENCY_IMU
 
